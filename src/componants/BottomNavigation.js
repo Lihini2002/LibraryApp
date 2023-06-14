@@ -2,13 +2,13 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native'
 import { BottomNavigation, Text } from 'react-native-paper';
 import { colors, FontSize } from '../global/styles';
-import Dashboard from '../screens/Dashboard';
-import Collections from '../screens/Collection';
 import MyAccount from '../screens/MyAccount';
 import Notifications from '../screens/Notifications';
+import CollectionStack from '../Routes/CollectionsStack';
+import HomeScreenStack from '../Routes/HomeScreenStack';
 
 
-export default function BottomNavigationComp (){
+export default function BottomNavigationComp (CollectionsStack){
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: 'dashboard', title: 'Dashboard', focusedIcon: 'home-circle'
@@ -19,8 +19,8 @@ export default function BottomNavigationComp (){
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
-    dashboard: Dashboard,
-    collections: Collections,
+    dashboard: HomeScreenStack,
+    collections: CollectionStack,
     account: MyAccount,
     notifications: Notifications
   });

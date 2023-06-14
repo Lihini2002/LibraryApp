@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, Image } from 'react-native';
 
-export default function AssetExample() {
+export default function Logo() {
   return (
     <View style={styles.container}>
       <Text style={styles.paragraph}>
         
       </Text>
-      <Image style={styles.logo} source={require('/Users/lihini/Documents/Alexandria2/assets/logo-no-background.png')} />
+      <Image style={styles.logo} source={require('/Users/lihini/Documents/Alexandria2/src/assets/logo-no-background.png')} />
     </View>
   );
 }

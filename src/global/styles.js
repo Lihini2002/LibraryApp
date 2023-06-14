@@ -15,6 +15,7 @@ export const colors={
 export const parameters=
 {
   headerHeight:60
+  
 }
 
 export const FontSize = {

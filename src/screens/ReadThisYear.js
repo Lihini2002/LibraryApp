@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import {View, Text, StyleSheet, Dimensions, TextInput, Button,Image, TouchableOpacity} from 'react-native'
 import {colors, parameters, TextStyle} from "../global/styles.js"
-import Logo  from '../componants/Logo.js'
 
-export default function Dashboard()
+
+export default function ReadThisYear()
 {
     return( 
     <View >
-        <Text>this is dashboard</Text>
+        <Text>This is the ReadThisYear page</Text>
     </View>
     )
    

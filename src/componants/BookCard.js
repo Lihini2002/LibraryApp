@@ -1,17 +1,16 @@
 
 import React from 'react';
-import { View, StyleSheet, Image, Text } from 'react-native';
+import { useState , useEffect} from 'react';
+import { View, StyleSheet, Image, Text, Alert } from 'react-native';
 import { Button, Card } from 'react-native-paper';
 import { Col, Grid } from 'react-native-easy-grid';
 import { colors } from '../global/styles';
-import { managePanProps } from 'react-native-gesture-handler/lib/typescript/handlers/PanGestureHandler';
-import { green100 } from 'react-native-paper/lib/typescript/src/styles/themes/v2/colors';
-
-
-
-const images = {
-  bookCover: require('/Users/lihini/Documents/Alexandria2/assets/6._SX120_.jpg'),
-};
+import { RenewBtn } from './RenewBtn';
+import { useFinesCalculator } from '../Hooks/useFinesCalculator';
+import { black } from 'react-native-paper/lib/typescript/src/styles/themes/v2/colors';
+// const images = {
+//   bookCover: require('/Users/lihini/Documents/Alexandria2/assets/6._SX120_.jpg'),
+// };
 
 const typography = StyleSheet.create({
   bookTitle: {
@@ -55,9 +54,21 @@ const typography = StyleSheet.create({
       paddingVertical:9, 
       fontSize: 19,
       fontWeight: '700',
-      color: '#ff6054'
+      color: '#24202b'
 
 
+    }, 
+    FineStatus:{
+      fontSize:20,
+      fontWeight:'800',
+      color: "#340055"
+
+    }
+,
+    Fines:{
+      fontSize:20,
+      fontWeight:'800',
+      color: "#340055"
     }
 
   
@@ -65,7 +76,7 @@ const typography = StyleSheet.create({
 
 const spacing = StyleSheet.create({
   card: {
-    marginHorizontal: 15,
+    marginHorizontal: 20,
     padding: 7,
     flexDirection: 'row',
     backgroundColor: colors.White,
@@ -79,6 +90,7 @@ const spacing = StyleSheet.create({
     padding: 10,
     margin: 5,
     borderRadius: 15,
+    width:"30%"
   },
   cardContent: {
     flexDirection: 'column',
@@ -94,14 +106,45 @@ const spacing = StyleSheet.create({
     textAlign:"right",
     cursor: "pointer"
   },
+  fines:{
+  flexDirection:'row',
+  justifyContent:'space-between',
+  backgroundColor:'#cebee8', 
+  padding: 10,
+  borderRadius:10
+  
+  }
 
   
 });
 
+
 export default function BookCard(props) {
+  // const [paymentAm, setPaymentAmount] = useState(0);
+  // const [paymentStat, setPaymentStatus] = useState(false)
+  const { updateFines } = useFinesCalculator();
+  console.log(props.loanid)
+  console.log("props.loanid")
+  const { fineAmount, fineStatus} = updateFines(props.loanid , props.daysOverdue)
+      // setPaymentAmount(paymentAmount);
+      // setPaymentStatus(paymentStatus);
+
+;
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const { paymentAmount, paymentStatus } = await updateFines(props.loanid, props.daysOverdue);
+  //     setPaymentAmount(paymentAmount);
+  //     setPaymentStatus(paymentStatus);
+  //   };
+    
+  //   fetchData();
+  // }, [updateFines, props.loanid, props.daysOverdue]);
+
   return (
+    
     <View style={spacing.card}>
-      <Image style={spacing.bookCover} source={images.bookCover} />
+      <Image style={spacing.bookCover} source={{ uri: props.bookCover }} />
       <View style={spacing.cardContent}>
         <View style={spacing.bookTitleContainer}>
           <Text style={typography.bookTitle}>{props.BookTitle}</Text>
@@ -109,27 +152,38 @@ export default function BookCard(props) {
         </View>
 
         <View>
-      {props.returnedStatus ? (
-        <Text style={typography.ReturnedStatus}>RETURNED</Text>
-      ) : (
-        <>
-         
-          {props.daysLeft> 0 && <Text style={typography.DaysL}>Days left:  {props.daysLeft}</Text>}
-          {props.daysOverdue > 0 && <Text style={typography.DaysO}>Days Overdue: {props.daysOverdue}</Text>}
-        </>
-      )}
-    </View>
+          {!props.returnedStatus && (
+            <Button
+              style={spacing.button}
+              mode="contained"
+              buttonColor={colors.Violet}
+              textColor={colors.White}
+              labelStyle={typography.buttonText}
+              onPress={() => {
+                Alert.alert("The book is renewed.");
+              }}
+            >
+              Renew
+            </Button>
+          )}
 
-        
-        <Button
-          style={spacing.button}
-          mode="contained"
-          buttonColor={colors.Violet}
-          textColor={colors.White}
-          labelStyle={typography.buttonText}
-        >
-          Renew
-        </Button>
+          {props.returnedStatus ? (
+            <Text style={typography.ReturnedStatus}>RETURNED</Text>
+          ) : (
+            <>
+              {props.daysLeft > 0 && <Text style={typography.DaysL}>Days left: {props.daysLeft}</Text>}
+              {props.daysOverdue > 0 && (
+                <Text style={typography.DaysO}>Days Overdue: {props.daysOverdue}</Text>
+              )}
+              {/* Use the paymentAmount and paymentStatus values in your component */}
+                <View style={spacing.fines}>
+                <Text style={typography.Fines}>Rs.{fineAmount}</Text>
+              <Text style={typography.FineStatus}> {fineStatus ? 'Paid' : 'Unpaid'}</Text>
+                </View>
+
+            </>
+          )}
+        </View>
       </View>
     </View>
   );

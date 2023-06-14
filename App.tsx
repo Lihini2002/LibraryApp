@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Text, View, StyleSheet, StatusBar} from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {colors, parameters} from "./src/global/styles.js"
-import Login from './src/screens/Login.js';
 import SignUp from './src/screens/Signup.js';
 import BottomNavigationComp from './src/componants/BottomNavigation.js';
+import Login from './src/screens/Login.js';
 
 
 // You can import from local files
@@ -23,7 +23,7 @@ export default function App() {
     backgroundColor = {colors.Purple}
     />
     
-      <BottomNavigationComp></BottomNavigationComp>
+      <Login></Login>
        </SafeAreaProvider>
     
 

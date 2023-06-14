@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 
 
 const useDateCalculator = () => {
-    const [borrowedDate, setBorrowedDate] = useState();
-    const [returnedDate, setReturnedDate] = useState();
-    const [DaysLeft, setDaysLeft] = useState(null);
-    const [DaysOverdue, setDaysOverdue] = useState(null);
+    // const [borrowedDate, setBorrowedDate] = useState();
+    // const [returnedDate, setReturnedDate] = useState();
+    // const [DaysLeft, setDaysLeft] = useState(null);
+    // const [DaysOverdue, setDaysOverdue] = useState(null);
  
 
     
@@ -29,9 +29,9 @@ const useDateCalculator = () => {
     }
 
     return {
-        DaysLeft,
-        DaysOverdue,
-        fines: "200",
+        // DaysLeft,
+        // DaysOverdue,
+        // fines: "200",
         processDays
     };
 }

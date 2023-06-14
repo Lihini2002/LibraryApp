@@ -1,130 +1,158 @@
-
 import React, { useState } from 'react';
-import {View, Text, StyleSheet, Dimensions, TextInput, Button,Image, TouchableOpacity} from 'react-native'
-import {colors, parameters, TextStyle} from "../global/styles.js"
-import Header from '../componants/Header.js'
-import Logo  from '../componants/Logo.js'
+import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import { app } from '../config';
+import HomeScreen from './HomeScreen';
+import MyAccount from './MyAccount';
+import BottomNavigationComp from '../componants/BottomNavigation';
+import { CommonActions } from '@react-navigation/native';
+import { colors } from '../global/styles.js';
+import getLibrarians from '../consts/librarian'; // Import the function to retrieve librarian data
+import getMembers from '../consts/member';
 
-export default function Login()
-{
+const Login = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [user, setUser] = useState(null); // State to store user details
 
-    const [email, setEmail] = useState('');
-    const [password , setPassword] = useState('')
-
-    const handleEmailChange = (text) => {
-      setEmail(text);
-    };
-
-    const handlePasswordChange = (pword) => {
-        setPassword(pword);
-      };
-
-    const HandleLogin = (e) => {
-       alert("logged in")
-      };
-
-    return( 
-        <View style= {styles.container}>
-            <Header></Header>
+  
+  const handleLogin = () => {
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(async (userCredential) => {
+        const user = userCredential.user;
+        setUser(user); // Set the user details in the component's state
+  
+        try {
+          const librarians = await getLibrarians(); // Retrieve librarian data
+          const members = await getMembers(); // Retrieve member data
           
-            <Text style={styles.Title}>Welcome back!</Text>
-            <Logo></Logo>
-           
-        <View style={styles.inputCont}>
-      
-            <TextInput style={styles.Input}
-             placeholder="Enter your email"
-             onChangeText={handleEmailChange}
-             value={email}
-             keyboardType="email-address"
-             autoCapitalize="none"
-             autoCompleteType="email"
-             textContentType="emailAddress">
-                
-             </TextInput>
-        </View>
+          // Convert the entered email to lowercase
+          const lowercaseEmail = email.toLowerCase();
+  
+          // Check if the entered email belongs to a librarian
+          const librarian = librarians.find((librarian) => librarian.email.toLowerCase() === lowercaseEmail);
+          if (librarian) {
+            // Navigate to the librarian screen
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Librarian' }],
+                params: {
+                  userEmail: email,
+                },
+              })
+            );
+          } else {
+            // Check if the entered email belongs to a member
+            const member = members.find((member) => member.email.toLowerCase() === lowercaseEmail);
+            if (member) {
+              getMemberData(email);
+              // Navigate to the home screen
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: 'Home' }],
+                  params: {
+                    userEmail: email,
+                  },
+                })
+              );
+            } else {
+              setError('Invalid email or password'); // If the email doesn't match any librarian or member, show an error
+            }
+          }
+        } catch (error) {
+          setError('Failed to retrieve user data');
+        }
+      })
+      .catch((error) => {
+        setError('Invalid email or password');
+      });
+  };
+  
+  if (user) {
+    return <BottomNavigationComp userEmail={user.email} />;
+  }
+  
 
-        <View style={styles.inputCont}>
-      
-      <TextInput style={styles.Input}
-       placeholder="Enter your password"
-       onChangeText={handlePasswordChange}
-       value={password}
-       secureTextEntry= {true}
-       textContentType="password">
-          
-       </TextInput>
-
-        <View style={styles.buttonStyle}>
-       <Button
-       title='Log in'
-       color={colors.Purple}
-        onPress={() => {HandleLogin}}>
-        </Button>
-        </View >
-
-        <View style="SignUpLabel">
-            <Text>First time here? Sign up</Text>
-            <View style={styles.buttonStyle}>
-            <Button
-            title='SignUp'
-            color={colors.Purple}
-                onPress={() => {HandleLogin}}>
-                </Button>
-                </View >
-        </View>
-     
-  </View>
-        
-
-
-
-        </View>
-    )
-}
+  return (
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        placeholderTextColor={colors.Pink}
+        onChangeText={text => setEmail(text)}
+        value={email}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        placeholderTextColor={colors.Pink}
+        onChangeText={text => setPassword(text)}
+        value={password}
+        secureTextEntry
+      />
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+        <Text style={styles.linkText}>How to Register</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    container :{
-        flex:1, 
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        backgroundColor:colors.Violet
-      
-        
-    },
-    
-    Title :{
-        fontSize: 42,
-      fontWeight: '800',
-      color: colors.White, 
-      fontFamily: 'Georgia',
-    
-      
-    }
-, 
-    
-    Input:{
-        marginTop: 5,
-        backgroundColor: colors.White,
-        width: 310,
-        borderRadius: 15, 
-        padding: 15, 
-        borderColor: colors.Purple,
-        borderWidth: 2,
-        fontSize: 22, 
-    }
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor:colors.Purple
+  },
+  logo: {
+    height:50,
+    width:300,
+    marginBottom: 100,
+  },
+  input: {
+    width: '80%',
+    height: 50,
+    borderWidth: 1,
+    borderColor: colors.Violet,
+    borderRadius: 5,
+    marginBottom: 15,
+    padding: 10,
+    color:colors.Pink
+  },
+  button: {
+    width: '80%',
+    height: 40,
+    backgroundColor: colors.Pink,
+    borderRadius: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+    shadowColor:colors.Peach
+  },
+  buttonText: {
+    color: colors.Purple,
+    fontSize: 16,
+    fontWeight:'bold'
+  },
+  linkText: {
+    color: colors.Pink,
+    fontSize: 16,
+    textDecorationLine: 'underline',
+  },
+  errorText: {
+    color: colors.Peach,
+    marginBottom: 10,
+  },
+});
 
-    , inputCont:{
-        marginTop:30,
-        alignItems: "stretch",
-    }
-
-,
- 
-buttonStyle:{
-    marginTop: 40
-    
-}
-,
-
-})
+export default Login;
