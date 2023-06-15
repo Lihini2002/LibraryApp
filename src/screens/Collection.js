@@ -89,7 +89,7 @@ export default function Collections({navigation}) {
         </View>
   
         {books.map((book, index) => (
-        <BookCard key={index} BookTitle={book.title} BookAuthor={book.author} daysLeft={book.daysleft} daysOverdue={book.daysoverdue} returnedStatus={false} bookCover={book.cover} loanid={book.loanid}/>
+        <BookCard key={index} BookTitle={book.title} BookAuthor={book.author} daysLeft={book.daysleft} daysOverdue={book.daysoverdue} returnedStatus={true} bookCover={book.cover} loanid={book.loanid}/>
       ))}
    
       </View>

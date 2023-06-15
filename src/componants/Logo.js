@@ -7,7 +7,7 @@ export default function Logo() {
       <Text style={styles.paragraph}>
         
       </Text>
-      <Image style={styles.logo} source={require('/Users/lihini/Documents/Alexandria2/src/assets/logo-no-background.png')} />
+      <Image style={styles.logo} source={require('/Users/lihini/Documents/Alexandria2/assets/logo-no-background.png')} />
     </View>
   );
 }

@@ -1,11 +1,12 @@
-import { getDatabase, ref, onValue } from "firebase/database";
-
+import firebase from '@react-native-firebase/app';
 const getMembers = () => {
   return new Promise((resolve, reject) => {
-    const db = getDatabase();
-    const membersRef = ref(db, "members");
 
-    onValue(membersRef, (snapshot) => {
+    const Reference = firebase.app().database('https://library-project-efd46-default-rtdb.asia-southeast1.firebasedatabase.app/');
+    const membersRef = Reference.ref('members')
+   
+
+    membersRef.on('value', (snapshot) => {
       if (snapshot && snapshot.val()) {
         const members = snapshot.val();
         const member = Object.keys(members).map((key) => ({

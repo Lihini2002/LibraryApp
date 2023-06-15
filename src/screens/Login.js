@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import { app } from '../config';
-import HomeScreen from './HomeScreen';
-import MyAccount from './MyAccount';
+import firebase from '@react-native-firebase/app';
+import auth from '@react-native-firebase/auth';
+import BottomNavigationLibrary from '../Routes/LibrarianBottomNavigation';
 import BottomNavigationComp from '../componants/BottomNavigation';
 import { CommonActions } from '@react-navigation/native';
 import { colors } from '../global/styles.js';
 import getLibrarians from '../consts/librarian'; // Import the function to retrieve librarian data
 import getMembers from '../consts/member';
-
+import Logo from '../componants/Logo';
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,12 +17,11 @@ const Login = ({ navigation }) => {
 
   
   const handleLogin = () => {
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(async (userCredential) => {
-        const user = userCredential.user;
-        setUser(user); // Set the user details in the component's state
+
+    firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(async (userCredential) => {
+      const user = userCredential.user;
+      setUser(user); // Set the user details in the component's state
   
         try {
           const librarians = await getLibrarians(); // Retrieve librarian data
@@ -40,7 +37,7 @@ const Login = ({ navigation }) => {
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,
-                routes: [{ name: 'Librarian' }],
+                routes: [{ LibrarianBottomNavigation}],
                 params: {
                   userEmail: email,
                 },
@@ -81,6 +78,7 @@ const Login = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Logo></Logo>
       <TextInput
         style={styles.input}
         placeholder="Email"

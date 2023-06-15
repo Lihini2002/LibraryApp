@@ -6,6 +6,7 @@ import GenreList from '../componants/GenreList';
 import getBooks from '../consts/books';
 import SearchResults from '../componants/SearchResults';
 import {colors} from "../global/styles.js";
+import AssetExample from '../componants/Logo';
 
 
 const HomeScreen = ({ navigation }) => {
@@ -67,6 +68,7 @@ const HomeScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <View>
+          <AssetExample></AssetExample>
         </View>
       </View>
       <Searchbar placeholder="Search" onChangeText={onChangeSearch} value={searchQuery} />

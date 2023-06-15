@@ -29,12 +29,10 @@ const LoginStack = () => {
              // Set custom styles for the header title
           },
         }} />
-      <Stack.Screen name="BottomComponent" component={BottomNavigationComp}   options={{
+      <Stack.Screen name="BottomComponent" component={BottomNavigationComp}
          
             
-             // Set custom styles for the header title
-          
-        }}/>
+        />
     </Stack.Navigator>
     </NavigationContainer>
   );
